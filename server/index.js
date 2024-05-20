@@ -1,9 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
 const socketIo = require('socket.io');
-
 
 const app = express();
 require("dotenv").config();
@@ -14,7 +12,7 @@ const messageRoutes = require('./routes/messageRoutes');
 const websocketRoutes = require('./routes/websocketRoutes');
 
 const corsOptions = {
-  origin: 'http://192.168.8.47:3000',
+  origin: process.env.CLIENT_URL,
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -23,13 +21,6 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
 app.use(express.json());
-
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  console.log('Headers:', req.headers);
-  next();
-});
-
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,

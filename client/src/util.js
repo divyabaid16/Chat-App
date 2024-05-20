@@ -1,13 +1,18 @@
 export const SERVER_URL = "http://localhost:3001";
 
-export const authToken = localStorage.getItem("authToken");
+export const getAuthToken = () => {
+  if (typeof localStorage !== 'undefined') {
+    return localStorage.getItem("authToken");
+  } else {
+    return null;
+  }
+}
+
+export const authToken = getAuthToken();
 
 export const userId = authToken
   ? JSON.parse(atob(authToken.split(".")[1])).userId
-  : null;;
-
-
-// util.js
+  : null;
 
 export const getUserIdFromAuthToken = (authToken) => {
   if (!authToken) return null;
@@ -21,11 +26,8 @@ export const getCurrentUserId = () => {
   return getUserIdFromAuthToken(authToken);
 }
 
-export const getAuthToken = () => {
+export const handleLogout = () => {
   if (typeof localStorage !== 'undefined') {
-    return localStorage.getItem("authToken");
-  } else {
-    // Handle scenarios where localStorage is not available, such as in incognito mode
-    return null;
+    localStorage.removeItem("authToken");
   }
 }

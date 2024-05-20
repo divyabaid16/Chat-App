@@ -8,20 +8,16 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { SERVER_URL, userId } from "../util";
 
 const CreateGroup = ({ open, handleClose, onGroupCreated }) => {
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
 
   const handleCreateGroup = () => {
-    const authToken = localStorage.getItem("authToken");
-    const userId = authToken
-      ? JSON.parse(atob(authToken.split(".")[1])).userId
-      : null;
-
     const data = { name: groupName, description, createdBy: userId };
 
-    fetch("http://localhost:3001/api/groups", {
+    fetch(`${SERVER_URL}/api/groups`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +33,9 @@ const CreateGroup = ({ open, handleClose, onGroupCreated }) => {
       })
       .then((group) => {
         console.log("Group created:", group);
-        onGroupCreated(group); // Update the list of groups
+        setGroupName("");
+        setDescription("");
+        onGroupCreated(group);
         handleClose();
       })
       .catch((error) => {
